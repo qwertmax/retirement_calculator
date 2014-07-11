@@ -1,0 +1,93 @@
+<div ng-controller="Results">
+    <div class="result-content">
+        <h2>Retirement summary</h2>
+        <div id="variables" ng-Switch="calculator">
+            <div ng-Switch-when="1">
+                <div class="result-summary">
+                    <div class="item">
+                        <span class="name">Total Savings at Retirement</span>
+                        <span class="value">${{savings.resultsVariables[0]}}</span>
+                    </div>
+                    <div class="item">
+                        <span class="name">Age When Savings Run Out</span>
+                        <span class="value">{{savings.resultsVariables[1]}}</span>
+                    </div>
+                </div>
+                <div class="result-description">
+                    <span class="prefix">Additional information:</span>
+                    <span ng-if="savings.condition == true">The values above do not allow for any funds at the end of retirement. The "Age When Savings Run Out" value is the age at which you will have 0$. There may also be unforeseen circumstances that will change these values</span>
+                    <span ng-if="savings.condition == false">Based of your previous inputs, you will be making more money in retirement than you will spend and therefore will not have an age when the funds will run out.</span>
+                </div>
+            </div>
+            
+            <div ng-Switch-when="2">
+                <div class="result-summary">
+                    <div class="item">
+                        <span class="name">Required Savings at Retirement</span>
+                        <span class="value">${{savings.resultsVariables[0]}}</span>
+                    </div>
+                    <div class="item">
+                        <span class="name">Actual Savings at Retirement</span>
+                        <span class="value">${{savings.resultsVariables[1]}}</span>
+                    </div>
+                </div>
+                <div class="result-description">
+                    <span class="prefix">Additional information:</span>
+                    <span ng-if="savings.condition >= 0">Based off your previous inputs, you are saving enough to live your desired retirement lifestyle and will have a surplus of {{savings.resultsVariables[1] - savings.resultsVariables[0]}} at the start of your retirement.</span>
+                    <span ng-if="savings.condition < 0">Based off your previous inputs, you will need {{savings.resultsVariables[0] - savings.resultsVariables[1]}} before you retire to live your desired retirement lifestyle.</span>
+                </div>
+            </div>
+
+            <div ng-Switch-when="3">
+                <div class="result-summary">
+                    <div class="item">
+                        <span class="name">You Can Retire at Age</span>
+                        <span class="value">{{savings.resultsVariables[0]}}</span>
+                    </div>
+                    <div class="item">
+                        <span class="label">Savings Required at Retirement</span>
+                        <span class="value">${{savings.resultsVariables[1]}}</span>
+                    </div>
+                </div>
+                <div class="result-description">
+                    <span class="prefix">Additional information:</span>
+                    <span>The values above are minimum outputs and do not account for unforeseen circumstances before or after retirement. If you want to have funds leftover after you die or for emergencies, it is prudent to save more.</span>
+                </div>
+            </div>
+        </div>
+        
+        <br/>
+        {{temp}}
+        <br/>
+        
+        <div id="chart" style="width: 628px; height: 500px;"></div>
+        <br/>
+
+        <!--<input type="text" ng-model="tableClass"/>-->
+        <!--<br/>-->
+        <!--<tablerow data="tableClass"></tablerow>-->
+        <!--<br/>-->
+
+        <retirementTable data="tableData"></retirementTable>
+        <br/>
+        <!--<div ng-repeat="i in q">-->
+          <!--<span style="display: inline-block;width: 150px">{{i.q}}</span>-->
+          <!--<span style="display: inline-block;width: 150px">{{i.q0}}</span>-->
+          <!--<span style="display: inline-block;width: 150px">{{i.q1}}</span>-->
+          <!--<span style="display: inline-block;width: 150px">{{i.q2}}</span>-->
+        <!--</div>-->
+        <!--{{q | newline | html}}-->
+        <!--<br/>-->
+        <!--{{sum}}-->
+        <!--{{$root.data | json}}-->
+        <!--<br />-->
+        <!--{{data | json}}-->
+        <div id="advisors-section">
+          <h2>Need help? Consult a trusted advisor</h2>
+          <p>This tool is merely an additional means of assistance. For better and more in depth advice, contact a financial advisor before making any financial decisions. Here are some advisors in your area that can help. Click on an advisor for more information.</p>
+          <div id="search-results">
+              <div ng-bind-html="advisors"></div>
+          </div>
+        </div>
+    </div>
+</div>

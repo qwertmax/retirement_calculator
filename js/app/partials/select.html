@@ -1,0 +1,15 @@
+<td>{{title}}</td>
+<td>
+  <input type="text" name="account[{{tid}}]" id="account-{{tid}}" ng-model="account" ng-blur="blur(data)" numbers-Only />
+</td>
+<td>
+  <select class="account-frequency form-select" name="frequency[{{tid}}]" ng-model="frequency" ng-blur="blur(data)">
+    <option value="52">Weekly</option>
+    <option value="26">Bi-weekly</option>
+    <option value="24">Fortnightly</option>
+    <option value="12">Monthly</option>
+    <option value="4">Quaterly</option>
+    <option value="1">Annually</option>
+  </select>
+</td>
+<td>${{(account || 0) * frequency}}</td>

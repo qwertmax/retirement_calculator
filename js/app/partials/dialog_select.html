@@ -1,0 +1,13 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="cancel()">&times;</button>
+  <h3>Load Retirement Tool</h3>
+</div>
+<div class="modal-body">
+  <!--{{toolName}}-->
+  <!--<label for="name">Retirement Tool Name</label><input type="text" name="name" id="name" ng-model="name" required="true"/>-->
+  <select name="calc_name" id="calc_select" ng-options="o.url as o.name for o in options" ng-model="calc_name"></select>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" ng-click="ok(calc_name)">OK</button>
+  <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+</div>

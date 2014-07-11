@@ -1,0 +1,26 @@
+<!--{{data | json}}-->
+<!--{{data_func()}}-->
+<table id="result-table">
+    <thead>
+        <tr>
+            <th>&nbsp;</th>
+            <th>CURRENT AGE</th>
+            <th>RETIREMENT AGE</th>
+            <!--<th>level</th>-->
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="d in data" class="{{'level' + d.attr.level}} {{d.name}}" ng-class-odd="odd" ng-class-even="even">
+            <td ng-if="d.attr.type=='seemore'" class="" ng-click="seeMore()" colspan="3"><span class="more">{{see}}</span></td>
+            <td ng-if="d.attr.type!='seemore'" class="name">{{d.name}}</td>
+            <td ng-if="d.attr.type!='seemore'" class="value1"><strong>${{d.value1}}</strong></td>
+            <td ng-if="d.attr.type!='seemore'" class="valie2">${{d.value2}}</td>
+            <!--<td>{{d.attr.level}}</td>-->
+        </tr>
+        <!--<tr class="see-more see">-->
+            <!--<td colspan="3" ng-click="seeMore()">-->
+                <!--<span class="more">{{see}}</span>-->
+            <!--</td>-->
+        <!--</tr>-->
+    </tbody>
+</table>

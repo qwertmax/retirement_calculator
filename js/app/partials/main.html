@@ -1,0 +1,36 @@
+<h1 id="page-title">Create Retirement Calculations {{name}}</h1>
+<div class="sub-title">
+    Use the retirement budgeting tool below to see what your retirement will look like from a financial perspective. The calculator will take into account how much you have currently saved, how much you plan to save, and how much you plan to spend in retirement. The results will be able to tell you if your plan meets your expectations regarding retirement age and desired retirement lifestyle.
+</div>
+<form name="retirement" novalidate id="wp-retirement-form" ng-submit="mySubmit()" onsubmit="return false;">
+    <div class="wp-logo"></div><div class="wp-title">Retirement Budgeting Tool</div>
+    <div class="controls">
+        <div class="buttons">
+            <button type="button" class="save" ng-click="save()">Save current<br />budget data</button>
+            <button type="button" class="erase" ng-click="erase()">Erase all data<br />and start new</button>
+            <button type="button" class="load" ng-click="load()">Load a previously<br />saved budget</button>
+            <button type="button" class="print" ng-click="print()">Print<br />budget</button>
+        </div>
+    </div>
+    <div class="space">&nbsp;</div>
+    <div class="clear">
+        <ul class="top-tabs">
+            <li ng-repeat="t in templates" ng-CLick="topTabClick(t)" ng-Class="{active: template == t}" class="top-tab">{{t.name}}</li>
+        </ul>
+    </div>
+
+    <!--<div ng-include="template.url" class="tab-content" ng_controller="template.controller"></div>-->
+    <!--<div ng-include="template.url" class="tab-content"></div>-->
+    <!--<div ng-repeat="t in templates" max="{{$index}}" ng-include="t.url" class="tab-content"></div>-->
+    <div ng-repeat="t in templates" ng-show="template == t" ng-include="t.url" class="tab-content"></div>
+
+    <div class="btn-wrap">
+        <button type="button" ng-Click="next()" class="nextBtn" ng-if="template.id != 5">Next</button>
+        <button type="button" ng-Click="save()" class="nextBtn" ng-if="template.id == 5">Save</button>
+    </div>
+    <div class="wp-copyright">
+        Retirement budgeting tool<br/>
+        by: WealthPrep.ca<br />
+        All rights reserved 2014
+    </div>
+</form>

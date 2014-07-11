@@ -1,0 +1,33 @@
+<div class="modal-header">
+  <button type="button" class="close" ng-click="cancel()">&times;</button>
+  <h3>Save Retirement Tool</h3>
+</div>
+<div class="modal-body">
+  {{toolName}}
+  <label for="name">Retirement Tool Name</label><input type="text" name="name" id="name" ng-model="name" required="true"/>
+  <div class="description">* duplicate budget names will overwrite previous progress</div>
+
+  <input type="checkbox" id="send-budget" ng-model="sendBudget"/><label for="send-budget">Send this budget to a financial advisor to review</label>
+  <div ng-if="sendBudget">
+    <div class="text-wrapper">
+      <div>Enter your information below and a certified financial professional will contact you to follow up</div>
+    </div>
+    <div class="form-item form-type-textfield form-item-phone">
+      <label for="edit-phone">Phone # </label>
+      <input type="text" id="edit-phone" name="phone" ng-model="$parent.contact.phone" value="" size="60" maxlength="128" class="form-text">
+    </div>
+    <div class="location-wrapper"><div class="form-item form-type-textfield form-item-location">
+      <label for="edit-location">Location </label>
+      <input type="text" id="edit-location" name="location" ng-model="$parent.contact.location" value="" size="60" maxlength="128" class="form-text">
+      <div class="description">enter city name and/or postal code</div>
+    </div>
+    </div>
+  </div>
+
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" ng-hide="!uid" ng-click="ok(name)">Save</button>
+  <button class="btn btn-warning" ng-hide="!uid" ng-click="cancel()">Cancel</button>
+  <button class="btn btn-primary" ng-hide="uid" ng-click="login(name)">Login</button>
+  <button class="btn btn-warning" ng-hide="uid" ng-click="register(name)">Register</button>
+</div>

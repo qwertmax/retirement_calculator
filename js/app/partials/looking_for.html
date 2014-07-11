@@ -1,0 +1,10 @@
+<div ng-controller="LookingFor" class="looking-for">
+    <div class="tab-inner indented">
+        <h2>Choose One Of The Following To Calculate</h2>
+        <!--<select ng-model="calculator" ng-options="o.value as o.name for o in calculatorOptions"></select>-->
+        <div ng-repeat="o in calculatorOptions" class="radio-wrap"> <!-- you can use "check wrap" for checkboxes -->
+            <input type="radio" name="calculator" ng-model="$parent.calculator" ng-value="o.value" id="calculatorOption_{{o.value}}" style="display: inline-block" />
+            <label for="calculatorOption_{{o.value}}">{{o.name}} <span class="account-description" tooltip="{{o.description}}">?</span></label>
+        </div>
+    </div>
+</div>

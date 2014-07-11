@@ -1,0 +1,474 @@
+#wp-retirement {position: relative;}
+
+/*looking for*/
+#wp-retirement .looking-for select {width: 400px;}
+/*end looking for*/
+
+#wp-retirement-form {
+        position:relative;
+        padding:50px 0 70px;
+        background-color:#404041;
+        font-family:Arial,sans-serif;
+        font-size:12px;
+        }
+
+#wp-retirement-form .wp-logo {
+        position:absolute;
+        top:0;
+        left:0;
+        background:url(../img/logo.png) no-repeat;
+        height:50px;
+        width:50px;
+        }
+
+#wp-retirement-form .wp-title {
+        position:absolute;
+        top:14px;
+        left:60px;
+        color:#fff;
+        font:18px/24px "oswaldregular", sans-serif;
+        text-transform:uppercase;
+        }
+        
+#wp-retirement-form .wp-copyright {
+        position:absolute;
+        bottom:13px;
+        left:25px;
+        color:#8b8b8b;
+        font-size:11px;
+        }
+        
+        #wp-retirement-form .wp-copyright a {color: #8b8b8b;}
+        #wp-retirement-form .wp-copyright a:hover {color: #9f9f9f;}
+
+#wp-retirement-form .buttons {
+        position:absolute;
+        right:0;
+        top:0;
+        }
+    
+        #wp-retirement-form .controls button {
+                display:block;
+                float:left;
+                height:50px;
+                padding:0 50px 0 0;
+                margin:0 0 0 10px;
+                font-size:10px;
+                font-weight:bold;
+                color:#b3b3b3;
+                text-align:right;
+                text-transform:uppercase;
+                background:transparent url(../img/sprite_actions.png) no-repeat;
+                border:none;
+                }
+        
+                #wp-retirement-form .controls button:hover {color:#fff;}
+                        
+                #wp-retirement-form .controls button.save {background-position:100% 0;}
+                #wp-retirement-form .controls button.erase {background-position:100% -50px;}
+                #wp-retirement-form .controls button.load {background-position:100% -100px;}
+                #wp-retirement-form .controls button.print {background-position:100% -150px;}
+
+#wp-retirement .space {
+        width: 100%;
+        height: 15px;
+        }
+
+#wp-retirement .top-tabs {
+        float:right;
+        overflow:hidden;
+        padding:0;
+        margin:0;
+        background: #E5E5E5;
+        }
+
+        #wp-retirement .top-tabs .top-tab {
+                float:left;
+                cursor:pointer;
+                color:#404041;
+                margin:0;
+                padding: 10px 28px;
+                list-style: none;
+                font-weight: bold;
+                }
+        
+        #wp-retirement .top-tabs .top-tab:hover,
+        #wp-retirement .top-tabs .active {background: #A8A8A8; color: #404041;}
+        
+#wp-retirement .tab-content {
+        min-height:420px;
+        padding:0 20px 0 10px;
+        position:relative;
+        background:#F9F9F9 url(../img/bg_lines.png) repeat-y 0 0;
+        }
+        
+        #wp-retirement .tab-content .tab-content {
+                padding:0;
+                background: transparent none;        
+                }
+                
+#wp-retirement .tab-inner {
+        padding:0 0 0 40px;
+        }
+        #wp-retirement .tab-inner.indented {padding-left:260px;}
+                
+#wp-retirement .tab-content h2 {
+        margin: 28px 0 45px;
+        color: #000;
+        font: 1.5em/1 "oswaldregular";
+        text-transform: uppercase;
+        }
+        
+#wp-retirement .tab-content .summary {
+        position:absolute;
+        right:20px;
+        top:28px;
+        white-space:nowrap;
+        }
+        
+        #wp-retirement .tab-content .summary .income {margin-right:10px;}
+        #wp-retirement .tab-content .summary i {
+                font-style:normal;
+                margin-right:5px;
+        }
+        
+#wp-retirement .ret-budget ul.vertical-tabs {
+        float:left;
+        width:250px;
+        margin:0;
+        padding:0;
+        }
+        
+        #wp-retirement .ret-budget ul.vertical-tabs li {
+                display:block;
+                position:relative;
+                top:0;
+                float:none;
+                padding:15px 15px 5px;
+                min-height:49px;
+                margin:0;
+                background-color:#fff;
+                border-top:1px solid #f1f1f1;
+                cursor:pointer;
+                }
+        
+        
+        #wp-retirement .ret-budget ul.vertical-tabs li.active {background: #e5e5e5;}
+        
+        #wp-retirement .ret-budget ul.vertical-tabs li.active:after {
+                content:"";
+                position:absolute;
+                right:-20px;
+                top:0;
+                width:20px;
+                height:70px;
+                background:url(../img/bg_arrow_menu.png) no-repeat;
+                }
+                
+        #wp-retirement .ret-budget ul.vertical-tabs li .name {
+                display:block;
+                margin:0 0 8px;
+                white-space:nowrap;
+                font:1.167em/1.2 "oswaldregular";
+                color:#b5b5b5;
+                text-transform:uppercase;
+                }
+        #wp-retirement .ret-budget ul.vertical-tabs li.subtab .name {
+                margin-left: 20px;
+                }
+        #wp-retirement .ret-budget ul.vertical-tabs li.subtab .count {
+                margin-left: 20px;
+                }
+
+                #wp-retirement .ret-budget ul.vertical-tabs li.active .name {color:#000;}
+
+#wp-retirement .slider-wrapper {width: 200px;}
+
+#wp-retirement .radio-wrap,
+#wp-retirement .check-wrap {
+        margin-bottom:10px;
+        }
+
+        #wp-retirement .radio-wrap input,
+        #wp-retirement .check-wrap input {
+                float:left;
+                }
+        
+        #wp-retirement .radio-wrap label,
+        #wp-retirement .check-wrap label {
+                display:block;
+                margin-left:20px;
+                cursor:pointer;
+                }
+                
+#wp-retirement .field-wrap {
+        margin-bottom:10px;
+        }
+        
+        #wp-retirement .field-wrap label {
+                display:block;
+                font-weight:bold;
+                }
+        
+        #wp-retirement .field-wrap input {
+                width:280px;
+                height:30px;
+                margin-bottom:10px;
+                padding:0 10px;
+                background-color:#fff;
+                border:1px solid #dedede;
+                font-size:12px;
+                border-radius:0;
+                box-shadow:none;
+                -moz-box-sizing:border-box;
+                box-sizing:border-box;
+                }
+                
+        #wp-retirement .field-wrap .slider-wrapper {margin-bottom:10px;}
+                
+        #wp-retirement .field-wrap .note {
+                font-size:11px;
+                margin:-5px 0 10px;
+                }
+
+#wp-retirement  table {
+        width:100%;
+        margin:27px 0;
+        }
+        
+        #wp-retirement thead,
+        #wp-retirement tbody {border-bottom:1px solid #e0e0e0;}
+        
+        #wp-retirement th {
+                padding:0 0 45px;
+                font:normal 1.5em/1 "oswaldregular";
+                text-transform:uppercase;
+                color:#000;
+                border-bottom:none;
+                }
+                
+        #wp-retirement th select {
+                float:right;
+                font-size:12px;
+                text-transform:none;
+                }
+                
+        #wp-retirement tr.even,
+        #wp-retirement tr.odd {
+                border:none;
+                background-color:#F9F9F9;
+                color:#000;
+                }
+                
+                #wp-retirement tr.odd {background-color:#e5e5e5;}
+        
+        #wp-retirement tr.even td,
+        #wp-retirement tr.odd td {padding:8px 10px 10px;}
+        
+        #wp-retirement td.ng-binding {width:50px;}
+        #wp-retirement td.ng-binding:first-child {width:300px;}
+        
+        #wp-retirement table input[type="text"] {
+                width:57px;
+                padding:0;
+                border:1px solid #ABADB3;
+                text-indent:2px;
+                font-family:Arial,Helvetica,sans-serif;
+                 }
+        
+        #wp-retirement table select {
+                width:100px;
+                height:auto;
+                padding:2px;
+                border:1px solid #ABADB3;
+                }
+                
+#wp-retirement .account-description {
+        display:inline-block;
+        width: 14px;
+        height:14px;
+        margin: 0 5px;
+        background: url(../img/bg_hint.png) no-repeat 0 0;
+        font-size:0;
+        letter-spacing: -9999px;
+        vertical-align: middle;
+        }
+        
+#wp-retirement .result-content {
+        padding-left:290px;
+        }
+        
+#wp-retirement .result-content h2 {
+        margin: 28px 0 45px;
+        color: #000;
+        font: 1.5em/1 "oswaldregular";
+        text-transform: uppercase;
+        }
+
+#wp-retirement .result-summary {
+        margin-bottom:20px;
+        border-top:1px solid #e0e0e0;
+        border-bottom:1px solid #e0e0e0;
+        }
+
+        #wp-retirement .result-summary .item {
+                display:inline-block;
+                margin:25px 25px 25px 0;
+                font-weight:bold;
+                text-transform:uppercase;
+                }
+
+        #wp-retirement .result-summary .value {
+                padding:10px 20px;
+                margin-left:5px;
+                background-color:#e5e5e5;
+                }
+                
+#wp-retirement .result-description .prefix {
+        color:#ccb736;
+        font-weight:bold;
+        text-transform:uppercase;
+        }
+        
+#wp-retirement #search-results .advisors-list .trusted {background-color:#ffffff;}
+        
+#result-table th {
+        padding:10px; 
+        white-space:nowrap;
+}
+
+#result-table thead, #result-table tbody {border:none;}
+
+#result-table td {padding:10px;}
+
+#result-table tr.even,
+#result-table tr.odd {
+        border:none;
+        background-color:#F9F9F9;
+        color:#000;
+        }
+        #result-table tr.odd {background-color:#e5e5e5;}
+        
+#result-table tr.level0 .name,
+#result-table tr.level1 .name {font-weight:bold;}
+
+#result-table tr.see-more {border-bottom: 1px solid #404041;}
+
+#result-table .more {
+        display:inline-block;
+        height:14px;
+        padding-right:20px;
+        color:#1F80CC;
+        background:#F9F9F9 url(../img/see_more.png) no-repeat 100% -14px;
+        cursor:pointer;
+        }
+        #result-table .more.less {background-position:100% 0;}
+        
+#wp-retirement-form .btn-wrap {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        width: 688px;
+        height: 70px;
+        background-color: #E5E5E5;
+        }
+        
+#wp-retirement-form  .nextBtn {
+        float: right;
+        min-width: 110px;
+        height: 50px;
+        margin: 10px 20px 0 0;
+        padding: 10px;
+        background-color: #39B54A;
+        border: medium none;
+        color: #fff;
+        font: 1.5em/1 "oswaldregular";
+        text-align: center;
+        text-transform: uppercase;
+        }
+        
+        #wp-retirement-form  .nextBtn:hover {background-color:#3aaa49;}
+
+#wp-retirement-form tr.level1,
+#wp-retirement-form tr.level2,
+#wp-retirement-form tr.level3 {display: none;}
+
+#wp-retirement-form tr.level1 td.name {padding-left: 10px;}
+#wp-retirement-form tr.level2 td.name {padding-left: 20px;}
+#wp-retirement-form tr.level3 td.name {padding-left: 30px;}
+
+#wp-retirement-form .horizontal-tabs {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        float: right;
+        }
+        #wp-retirement-form .horizontal-tabs li.active {
+          background: #AAD353;
+        }
+        #wp-retirement-form .horizontal-tabs li.filled {
+          background: #00AEEC;
+        }
+        #wp-retirement-form .horizontal-tabs li.active:hover {
+          background: #AAE363;
+        }
+        #wp-retirement-form .horizontal-tabs li.filled:hover {
+          background: #00BEFC;
+        }
+        #wp-retirement-form .horizontal-tabs li:hover {
+          background: #FDD64C;
+        }
+        #wp-retirement-form .horizontal-tabs li {
+          background: #FDC63C;
+          float: left;
+          cursor: pointer;
+          padding: 7px;
+          font-size: 11px;
+        }
+        #wp-retirement-form .description {overflow: hidden; float: right;}
+        #wp-retirement-form .description > div {float: left; padding: 10px;}
+        #wp-retirement-form .description > div span.bg {width: 50px; display: inline-block;}
+        #wp-retirement-form .description .filled {background: #00AEEC;}
+        #wp-retirement-form .description .active {background: #AAD353;}
+
+#wp-retirement .tab-content .big {
+        color: #b5b5b5;
+        font: 1.5em/1 "oswaldregular";
+        text-transform: uppercase;
+        margin: 70px 0;
+        }
+#wp-retirement .tab-content .custom-label {
+        color: #333333;
+        font-weight: bold;
+        font-size: 13px;
+        line-height: 18px;
+        }
+#wp-retirement #result-table .Income {
+        border-bottom: 1px solid #e0e0e0;
+        }
+#wp-retirement #result-table .Expenses {
+        border-bottom: 1px solid #e0e0e0;
+        }
+#wp-retirement #result-table .Starting {
+        background-color: #404041;
+        color: #f55555;
+        }
+
+#wp-retirement #search-results label {font-weight: bold;}
+
+.modal-body input[type="text"].ng-invalid {border: 1px solid #FF0000;}
+.modal-header button.close {margin: 0 15px 0 0;}
+
+#send-budget {
+  float: left;
+  margin: 2px 5px 0 0;
+}
+
+#wp-retirement #advisors-section h2 {
+  margin: 0;
+}
+#wp-retirement #search-results {
+  padding: 15px;
+  margin-bottom: 20px;
+}

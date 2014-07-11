@@ -1,0 +1,524 @@
+<?php
+
+function wp_retirement_menu(){
+  return array(
+    'admin/config/content/wp_retirement' => array(
+      'title' => t('Retirement Settings'),
+      'description' => t('Budget types configuration'),
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('wp_retirement_settings_form'),
+      'access arguments' => array('access administration pages'),
+      'type' => MENU_NORMAL_ITEM
+    ),
+    'retirement-calc' => array(
+//      'title' => t('Budget Management'),
+      'page callback' => 'wp_retirement_calc',
+      'access callback' => true,
+      'type' => MENU_CALLBACK,
+    ),
+    'wp_retirement_budget_accounts' => array(
+      'page callback' => 'wp_retirement_budget_accounts',
+      'access callback' => true,
+      'type' => MENU_CALLBACK,
+    ),
+    'wp_retirement_rest/%' => array(
+      'page callback' => 'wp_retirement_rest',
+      'page arguments' => array(1),
+      'access callback' => true,
+      'type' => MENU_CALLBACK,
+    ),
+    'wp-retirement-advisors' => array(
+      'page callback' => 'wp_retirement_advisors',
+      'page arguments' => array(),
+      'access callback' => true,
+      'type' => MENU_CALLBACK,
+    ),
+    'wp-retirement-tcpdf' => array(
+      'page callback' => 'wp_retirement_tcpdf_page',
+      'access callback' => TRUE,
+      'type' => MENU_CALLBACK,
+    ),
+  );
+}
+
+function wp_retirement_theme(){
+  return array(
+    'retirement_pdf' => array(
+      'variables' => array('args' => array()),
+      'template' => 'retirement_pdf',
+    ),
+  );
+}
+
+function wp_retirement_node_info() {
+  return array(
+    'wp_retirement' => array(
+      'base' => 'wp_retirement',
+      'name' => t('Retirement'),
+      'description' => t('Represents individual retirement.'),
+      'title_label' => t('Retirement Name'),
+      'locked' => TRUE
+    ),
+  );
+}
+
+function wp_retirement_settings_form($form, &$form_state){
+  $str = 'wp_retirement';
+  $values = variable_get($str);
+
+  $form[$str] = array(
+    '#type' => 'fieldset',
+    '#title' => "WP Retirement",
+    '#tree' => TRUE
+  );
+
+  $form[$str]['exclude'] = array(
+    '#type' => 'textfield',
+    '#title' => 'Exclude terms',
+    '#default_value' => $values['exclude'],
+  );
+
+  return system_settings_form($form);
+}
+
+function wp_retirement_calc($node = null){
+  drupal_add_library('system', 'ui.slider');
+  drupal_add_library('wp_budget', 'highcharts');
+  $path = drupal_get_path('module', 'wp_retirement');
+  angularjs_init_application('retirementApp');
+  drupal_add_css($path .'/js/app/css/bootstrap.css');
+  drupal_add_css($path .'/js/app/css/retirement.css');
+  drupal_add_css($path .'/js/libs/angular_slider/angular-slider.min.css');
+//  drupal_add_js($path .'/js/libs/angular_slider/slider.js');
+  drupal_add_js($path .'/js/libs/angular_slider/angular-slider.js');
+//  drupal_add_js($path .'/js/libs/ui.bootstrap/ui-bootstrap-0.7.0.js');
+//  drupal_add_js($path .'/js/libs/bootstrap_ui/ui-bootstrap-0.7.0.min.js');
+//  drupal_add_js($path .'/js/libs/ui.bootstrap/ui-bootstrap-tpls-0.7.0.js');
+  drupal_add_js($path .'/js/libs/ui.bootstrap/ui-bootstrap-tpls-0.7.0.min.js');
+  drupal_add_js($path .'/js/app/js/app.js');
+
+  wp_retirement_add_dir($path .'/js/app/js/controllers');
+  drupal_add_js($path .'/js/app/js/controllers.js');
+  drupal_add_js($path .'/js/app/js/services.js');
+
+  $calculators_list = json_encode(wp_retirement_load_calcs());
+  $calculators_list = '<div id="caclulators_list" style="display: none;">'. $calculators_list .'</div>';
+//  drupal_add_css(drupal_get_path("theme", "fa_theme") ."/css/fa.css");
+//  drupal_add_js(array("nid" => isset($node->nid)? $node->nid: 0), 'setting');
+
+  $output = '';
+
+  global $user;
+  if(!$user->uid){
+    $login = "<div class='login-popup' style='display: none;'>". _fa_make_link('Login', 'login') ."</div>";
+    $register = "<div class='register-popup' style='display: none;'>". _fa_make_link('Register', 'register') ."</div>";
+    $output = $login . $register;
+  }
+
+  $main_html_path = '/'. drupal_get_path('module', 'wp_retirement') .'/js/app/partials/main.html';
+
+//  $advisors = wp_retirement_advisors();
+//  $advisors = "<div id='advisors' style='display: none;'>$advisors</div>";
+
+  if(isset($node)){
+    $node = entity_metadata_wrapper('node', $node, array('langiage' => LANGUAGE_NONE));
+    $body = $node->body->value();
+    $body = $body['value'];
+    $title = $node->title->value();
+    $nid = $node->nid->value();
+    $settings = array(
+      'body' => $body,
+      'name' => $title,
+      'nid' => $nid,
+    );
+    $settings = '<div id="settings" style="display: none;">'. drupal_json_encode($settings) .'</div>';
+    $output .= $calculators_list . $settings .'<div id="wp-retirement" ng-controller="MainCtrl" ng-include="\''. $main_html_path .'\'"></div>';
+    return $output;
+  }
+
+  $output .= $calculators_list .'<div id="wp-retirement" ng-controller="MainCtrl" ng-include="\''. $main_html_path .'\'"></div>';
+
+  drupal_add_js(array("nid" => isset($node->nid)? $node->nid: 0), 'setting');
+  return $output;
+}
+
+function wp_retirement_form($node, &$form_state) {
+  $form = node_content_form($node, $form_state);
+
+//  $form['#prefix'] = '<div ng-view>';
+//  $form['#suffix'] = '</div>';
+//  $form['angular'] = array('#markup' => '<div ng-view></div>');
+
+//  $path = drupal_get_path('module', 'wp_retirement');
+//  angularjs_init_application('retirementApp');
+////  drupal_add_css($path . '/js/app/css/bootstrap.css');
+////  drupal_add_css($path . '/js/app/css/page.css');
+//  drupal_add_js($path . '/js/app/js/app.js');
+//  drupal_add_js($path . '/js/app/js/controllers.js');
+//  drupal_add_js($path . '/js/app/js/services.js');
+//
+//
+//  drupal_add_css(drupal_get_path("theme", "fa_theme") ."/css/fa.css");
+//  drupal_add_js(array("nid" => isset($node->nid)? $node->nid: 0), 'setting');
+  return $form;
+}
+
+function wp_retirement_node_view($node, $view_mode, $langcode){
+  global $user;
+  if($node->type == "wp_retirement"){
+    if(($user->uid == $node->uid) || $user->uid == 1){
+//      module_load_include('inc', 'node', 'node.pages');
+//      $node_form = node_page_edit($node);
+
+      $node->content['edit-form'] = array(
+//        '#markup' => wp_retirement_calc($node_form),
+        '#markup' => wp_retirement_calc($node),
+        '#weight' => 10,
+      );
+    }else{
+      drupal_set_message('You don\'t have access to this page.', 'error');
+    }
+  }
+}
+
+function wp_retirement_form_wp_retirement_node_form_alter(&$form, &$form_state, $form_id) {
+  unset($form['additional_settings']);
+  unset($form['revision_information']);
+  unset($form['author']);
+  unset($form['options']);
+  unset($form['comment_settings']);
+  unset($form['menu']);
+  unset($form['metatags']);
+  unset($form['path']);
+  unset($form['actions']['preview']);
+  unset($form['#token']);
+}
+
+function wp_retirement_add_dir($path, $options = array()){
+  foreach(scandir($path) as $file){
+    if($file == '.' || $file == '..') continue;
+
+    if(isset($options['type']) && ($options['type'] == 'css')){
+      drupal_add_css($path .'/'. $file);
+    }else{
+      drupal_add_js($path .'/'. $file);
+    }
+  }
+}
+
+function wp_retirement_budget_accounts(){
+  if(!isset($_GET['tid'])){
+    return;
+  }
+
+  $tid = intval($_GET['tid']);
+  if(!is_numeric($tid)){
+    return;
+  }
+
+  $budget_accounts = wp_retirement_get_budget_accounts($tid);
+
+  drupal_json_output(array('budgetAccounts' => $budget_accounts));
+  exit;
+}
+
+function wp_retirement_get_budget_accounts($tid){
+  $wp_retirement = variable_get('wp_retirement');
+  $excludes = explode(',', $wp_retirement['exclude']);
+
+  $budget_accounts = taxonomy_get_children($tid);
+  foreach($budget_accounts as &$item){
+    if(in_array($item->tid, $excludes)){
+      unset($budget_accounts[$item->tid]);
+      continue;
+    }
+    $item = wp_retirement_clear_term($item);
+    wp_retirement_tree($item);
+  }
+  return $budget_accounts;
+}
+
+function wp_retirement_clear_term($term){
+  unset($term->format);
+//  unset($term->weight);
+  unset($term->vocabulary_machine_name);
+  unset($term->metatags);
+  return $term;
+}
+
+function wp_retirement_tree(&$item){
+  if($parents = taxonomy_get_children($item->tid)){
+    foreach($parents as &$parent){
+      $parent = wp_retirement_clear_term($parent);
+      wp_retirement_tree($parent);
+//      $item->parents[$parent->tid] = $parent;
+      $item->parents[$parent->weight] = $parent;
+    }
+
+  }
+}
+
+function wp_retirement_rest($op, $data = null){
+  $function = __FUNCTION__ .'_'. $op;
+  switch($op){
+    case 'save':
+      return $function();
+      break;
+    case 'load':
+      return $function($data);
+      break;
+  }
+}
+
+function wp_retirement_rest_save(){
+  $json_data = file_get_contents("php://input");
+  $json_data = json_decode($json_data);
+  if(isset($json_data->contact)){
+    $json_contact = $json_data->contact;
+  }
+  $json_data = $json_data->data;
+  $data = json_decode($json_data);
+
+  if(isset($data->nid)){
+    $node = node_load($data->nid);
+    $node = entity_metadata_wrapper('node', $node, array('language' => LANGUAGE_NONE));
+  }else{
+    $node = wp_retirement_create_node('wp_retirement');
+  }
+
+  if(!isset($data->name)){
+    $data->name = wp_retirement_generateRandomString(10);
+  }
+
+  $node->title->set($data->name);
+  $node->body->set(array('value' => $json_data));
+  entity_save('node', $node);
+
+  if(isset($json_contact)){
+    $values = $json_contact;
+    $email = 'info@wealthprep.ca';
+//    $email = 'maxfree@mail.ru';
+    global $user;
+    $u = user_load($user->uid);
+    $u = entity_metadata_wrapper('user', $u, array('langcode' => LANGUAGE_NONE));
+//    watchdog('budget', print_r($node->nid->value(), true));
+    drupal_mail("wp_retirement", "wp_retirement", $email, LANGUAGE_NONE, array(
+      'name' => $u->field_first_name->value() .' '. $u->field_last_name->value(),
+      'link' => l('Retirement Tool Name: '. $node->title->value(), 'node/'. $node->nid->value()),
+      'pdf_link' => l('Download PDF: ', 'wp-retirement-tcpdf/'. $node->nid->value()),
+      'phone' => $values->phone,
+      'email' => $u->mail->value(),
+      'location' => $values->location,
+    ));
+  }
+
+  $path = drupal_lookup_path('alias', 'node/'. $node->nid->value());
+  drupal_json_output(array('data' => $data, 'path' => $path));
+  exit;
+}
+
+function wp_retirement_rest_load($nid){
+  if(!isset($nid) || !is_numeric($nid)){
+    return null;
+  }
+  $node = node_load($nid);
+  $node = entity_metadata_wrapper('node', $node, array('language' => LANGUAGE_NONE));
+  drupal_json_output(array('data' => $node->body->value()));
+  exit;
+}
+
+function wp_retirement_create_node($type) {
+  global $user;
+
+  $values = array(
+    'type' => $type,
+    'uid' => $user->uid,
+    'status' => 1,
+    'comment' => 0,
+    'promote' => 0,
+  );
+  $entity = entity_create('node', $values);
+  $ewrapper = entity_metadata_wrapper('node', $entity);
+//  $ewrapper->title->set($values['title']);
+//  $ewrapper->body->set(array('value' => $values['body']));
+//  $ewrapper->body->summary->set('Things that interest me');
+
+//  $entity->field_my_date[LANGUAGE_NONE][0] = array(
+//    'value' => date_format(date('F j, Y'), 'Y-m-d'),
+//    'timezone' => 'UTC',
+//    'timezone_db' => 'UTC',
+//  );
+//  $ewrapper->save();
+  return $ewrapper;
+}
+
+function wp_retirement_library() {
+  return array(
+    'highcharts' => array(
+      'title' => 'Highcharts',
+      'website' => 'http://www.highcharts.com',
+      'version' => '3.0.4',
+      'js' => array(
+        'sites/all/libraries/highcharts/highcharts.js' => array()
+      )
+    )
+  );
+}
+
+function wp_retirement_load_calcs(){
+  global $user;
+  $budgets_list = db_select("node", "n")
+    ->fields('n', array('title', 'nid'))
+    ->condition('n.type', "wp_retirement")
+    ->condition('n.uid', $user->uid);
+  $budgets_list->join('url_alias', 'a', 'a.source = CONCAT(\'node/\', n.nid)');
+  $budgets_list = $budgets_list->fields('a', array('source', 'alias'))
+    ->execute()
+    ->fetchAll();
+
+  $budgets = array();
+  foreach($budgets_list as $budget){
+    $budgets[] = array('name' => $budget->title, 'url' => $budget->alias);
+  }
+  return $budgets;
+}
+
+function wp_retirement_generateRandomString($length = 10) {
+  $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  $randomString = '';
+  for ($i = 0; $i < $length; $i++) {
+    $randomString .= $characters[rand(0, strlen($characters) - 1)];
+  }
+  return $randomString;
+}
+
+function wp_retirement_advisors(){
+  if($_SERVER['HTTP_HOST'] == "www.fa.lc:8888"){
+    print json_encode(array('advisors' => "<div>test</div>"));
+    exit;
+  }
+  $index = variable_get('sphinxsearch_query_index', '');
+
+  $sphinxsearch = &sphinxsearch_get_client();
+  $sphinxsearch->ResetFilters();
+  $sphinxsearch->ResetGroupBy();
+  $sphinxsearch->SetSortMode(SPH_SORT_RELEVANCE);
+  $sphinxsearch->SetSortMode(SPH_SORT_ATTR_ASC, "latitude");
+  $sphinxsearch->SetSortMode(SPH_SORT_ATTR_ASC, "longitude");
+  $sphinxsearch->SetMatchMode(SPH_MATCH_EXTENDED);
+  $sphinxsearch->SetArrayResult(TRUE);
+  $sphinxsearch->SetLimits(0, 5);
+
+  fa_ipdetection();
+  $coord = new stdClass();
+  $coord->latitude = $_SESSION['geoip']['latitude'];
+  $coord->longitude = $_SESSION['geoip']['longitude'];
+
+  $radius = 2;
+//  $sphinxsearch->SetFilterFloatRange("latitude", deg2rad($coord->latitude - $radius), deg2rad($coord->latitude + $radius));
+//  $sphinxsearch->SetFilterFloatRange("longitude", deg2rad($coord->longitude - $radius), deg2rad($coord->longitude + $radius));
+
+  $sphinxsearch->SetFilter("account_type", array(FA_TRUSTED));
+  $sphinxsearch->SetFilter('terms13', array(430));//tools
+  $result = $sphinxsearch->Query("", $index);
+  $output = fa_search_results($result);
+
+  print json_encode(array('advisors' => $output['content']));
+  exit;
+}
+
+function wp_retirement_tcpdf_page($nid = null){
+  if(!$nid){
+    return;
+  }
+  $node = node_load($nid);
+
+  $options = array('absolute' => TRUE);
+  $url = url('node/' . $nid, $options);
+
+  global $base_url;
+
+  $tcpdf = tcpdf_get_instance();
+  $tcpdf->DrupalInitialize(array(
+    'footer' => array(
+      'callback' => array(
+        'function' => 'wp_budget_tcpdf_footer',
+        'context' => array(
+          'url' => $url,
+          'base_url' => $base_url
+        ),
+      ),
+    ),
+    'header' => array(
+      'callback' => array(
+        'function' => 'wp_budget_tcpdf_header',
+        'context' => array(
+          'header' => 'Budget Tool: '. $node->title,
+          'url' => $url,
+          'base_url' => $base_url
+        ),
+      ),
+    ),
+  ));
+
+  $config = variable_get('wp_retirement');
+  $wrapper = entity_metadata_wrapper('node', $node, array('language' => LANGUAGE_NONE));
+  $data = $wrapper->body->value();
+  $data = $data['value'];
+  $data = json_decode($data);
+
+  $args['data'] = $data;
+//  print_r($data);
+  $args['budget_accounts_income'] = wp_retirement_get_budget_accounts(467);
+  $args['budget_accounts_expense'] = wp_retirement_get_budget_accounts(468);
+  $args['post_budget_accounts_income'] = wp_retirement_get_budget_accounts(675);
+//  print_r($budget_accounts_expense);
+//  exit;
+
+
+  $args['name'] = $node->title;
+//  $args['income'] = $table_income;
+//  $args['expense'] = $table_expense;
+  $html = theme('retirement_pdf', array('args' => $args));
+//  print_r($html);
+//  exit;
+  $tcpdf->SetFont('pdfahelvetica', 'R');
+  $tcpdf->writeHTML($html, true, false, true, false, '');
+  $pdf = $tcpdf->Output('', 'S');
+
+  header('Content-Type: application/pdf');
+  header('Content-Type: text/html');
+  header('Content-Length: ' . strlen($pdf));
+  $name = str_replace(array(" ", "/", "'"), array("_", "_", ""), strtolower($node->title));
+  header('Content-Disposition: attachment; filename="'. $name .'.pdf"');
+  print $pdf;
+  return NULL;
+}
+
+function wp_retirement_tcpdf_header(&$tcpdf, $context){
+  $theme_path = drupal_get_path('theme', 'fa_theme');
+  $tcpdf->Image($theme_path .'/logo.png', 10, 10, 30, 0, 'png', $context['base_url'], '', TRUE, 300, 'L', FALSE, FALSE, 0, FALSE, FALSE, FALSE);
+  $tcpdf->SetXY(60, 10);
+  $tcpdf->SetFont('pdfahelvetica', 'B', 18);
+  $tcpdf->Write(0, $context['header'], $context['url'], false, '', false, true, true);
+}
+
+function wp_retirement_tcpdf_footer(&$tcpdf, $context){
+  $theme_path = drupal_get_path('theme', 'fa_theme');
+  $tcpdf->Image($theme_path .'/logo2.png', 10, 275, 10, 10, 'png', $context['base_url'], '', false, 300, 'L', FALSE, FALSE, 0, FALSE, FALSE, FALSE);
+  $tcpdf->SetXY(27, 275);
+  $tcpdf->SetFont('pdfahelvetica', 'R', 9);
+  $tcpdf->Write(0, "Retirement tool by: WealthPrep.ca", '', false, '', false, true, true);
+  $tcpdf->SetXY(27, 280);
+  $tcpdf->Write(0, "All rights reserved 2014", '', false, '', false, true, true);
+}
+
+function wp_retirement_mail($key, &$message, $params){
+  $params['key'] = $key;
+  switch($key){
+    case "wp_retirement":
+      $message['subject'] = t('E-mail sent from @site-name', array('@site-name' => variable_get('site_name', 'Drupal')));
+      $message['body'][] = theme("fa_email_templates", array("args" => $params));
+      break;
+  }
+}

@@ -1,0 +1,4 @@
+name = Wealthprep Retirement Tool
+description = Wealthprep retirement tool
+core = 7.x
+package = Wealthprep

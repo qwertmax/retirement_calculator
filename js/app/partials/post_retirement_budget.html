@@ -1,0 +1,108 @@
+<div ng-controller="PostRetBudget" class="post-ret-budget ret-budget">
+  <!--<h2>Annual Savings/Shortfall</h2>-->
+    <div class="summary">
+        <span class="Surplus"><i>Annual Nest Egg Spending:</i> <b>${{Surplus}}</b></span>
+        <!--<span class="income"><i>Income:</i> <b>${{income.total}}</b></span>-->
+        <!--<span class="expenses"><i>Expense:</i> <b>${{expense.total}}</b></span>-->
+    </div>
+
+    <ul class="vertical-tabs">
+        <li ng-repeat="t in tabs" ng-CLick="tabClick(t)" class="account-{{t.tid}}-tab" ng-Class="{active: tab==t, subtab: t.type == 'expense'}">
+            <div class="name">{{t.name}}</div>
+            <div class="count">${{calcTotal(t)}}</div>
+        </li>
+    </ul>
+
+    <!--<div class="slider-wrapper">-->
+        <!--<slider custom-floor="0" floor="1" custom-ceiling="200" ceiling="200" step="1" precision="1" ng-model="percentage"></slider>-->
+    <!--</div>-->
+
+  <div ng-repeat="t in tabs" ng-show="tab == t" class="tab-content">
+    <div class="tab-inner">
+      <!--<div ng-if="t.type == 'custom'">-->
+        <!--<h2>Surplus/Shortfall in Retirement </h2>-->
+        <!--<div class="field-wrap">-->
+          <!--<label for="Surplus">Enter Your Savings in Retirement</label>-->
+          <!--<input type="text" id="Surplus" name="Surplus" ng-model="$parent.$parent.Surplus" numbers-Only />-->
+          <!--<div class="note">Note: If you are aware of your surplus/shortfall in retirement fill in the input box above and proceed to the Results tab. If unaware, fill in your information in the tabs along the side of the page and your annual savings/shortfall will aromatically calculate for you.</div>-->
+        <!--</div>-->
+      <!--</div>-->
+
+      <div ng-if="t.type == 'income'">
+        <table>
+          <thead>
+            <th colspan="4">{{t.title}}</th>
+          </thead>
+          <tbody>
+            <tr ng-repeat="row in t.parents" tid="row.tid" frequency="income.frequency[row.tid]" account="income.account[row.tid]" title="{{row.name}}" ng-class-odd="'odd'" ng-class-even="'even'"></tr>
+          </tbody>
+        </table>
+
+        <div class="note">*Be sure to fill out the Expenses tab on the left before you move on to the next step</div>
+      </div>
+
+      <div ng-if="t.type == 'custom'">
+          <h2>Annual Retirement Expenses</h2>
+          <div class="field-wrap">
+            <label for="AnnualRetirementExpenses">Enter Total Annual Expenses</label>
+              <input type="text" ng-model="$parent.$parent.AnnualRetirementExpenses" id="AnnualRetirementExpenses" />
+              <div class="note">*Enter what you expect to pay for living expenses in retirement. You may either input a total in the input box above and click the Next button below, or manually calculate your expenses by using the expense category tabs.</div>
+          </div>
+          <div class="big">OR</div>
+          <div class="field-wrap">
+            <div class="custom-label">Calculate Expenses by Category</div>
+            <div class="note">If you would like to manually calculate your expected living expenses in retirement, you may fill out the 5 expense categories below and we will calculate the total for you. Start by clicking on Financial Obligations and complete each expense category before clicking Next.</div>
+          </div>
+
+        <!--<div class="field-wrap">-->
+              <!--<div class="slider-wrapper">-->
+                  <!--<div ui-slider min="1" max="200" step="1" ng-model="percentage"></div>-->
+                  <!--<slider custom-floor="percentage.minAge" floor="1" custom-ceiling="percentage.maxAge" ceiling="100" step="1" precision="2" ng-model="percentage.cost"></slider>-->
+                  <!--<slider foor="1" ceiling="200" step="1" precision="1" translate=""></slider>-->
+              <!--</div>-->
+              <!--<div class="note">Note: If unaware or unsure of your total expenses, complete the tabs on the left and we'll calculate this for you. Completing the tabs on the left will replace the total on this page.</div>-->
+          <!--</div>-->
+      </div>
+
+      <div ng-if="(t.type == 'expense') && hasParents(t.parents[0])">
+        <div ng-repeat="tt in t.parents">
+          <table>
+            <thead>
+            <th colspan="4">{{tt.name}}</th>
+            </thead>
+            <tbody>
+              <tr ng-repeat="row in tt.parents" tid="row.tid" frequency="expense.frequency[row.tid]" account="expense.account[row.tid]" title="{{row.name}}" ng-class-odd="'odd'" ng-class-even="'even'">
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div ng-if="(t.type == 'expense') && !hasParents(t.parents[0])">
+        <table>
+          <thead>
+          <th colspan="4">{{t.title}}</th>
+          </thead>
+          <tbody>
+          <tr ng-repeat="row in t.parents" tid="row.tid" frequency="expense.frequency[row.tid]" account="expense.account[row.tid]" title="{{row.name}}" ng-class-odd="'odd'" ng-class-even="'even'">
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <ul class="horizontal-tabs subtabs" ng-show="tab.type=='expense' || tab.type == 'custom'">
+    <li ng-Click="prevSubTab()"><</li>
+    <li ng-repeat="t in tabs | filter: {type: 'expense'}" ng-CLick="tabClick(t)" class="account-{{t.tid}}-tab" ng-Class="{active: tab==t, filled: isTabFilled(t)}">
+      <div class="name">{{t.name}}</div>
+    </li>
+    <li ng-Click="nextSubTab()">></li>
+  </ul>
+  <div class="description" ng-show="tab.type=='expense' || tab.type == 'custom'">
+    <div><span class="filled bg">&nbsp;</span><span> - filled tab</span></div>
+    <div><span class="active bg">&nbsp;</span><span> - active tab</span></div>
+    <div>all legend buttons are clickable</div>
+  </div>
+
+</div>

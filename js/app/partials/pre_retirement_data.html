@@ -1,0 +1,42 @@
+<div ng-controller="PreRetData" class="pre-ret-data">
+    <div class="tab-inner indented">
+        <h2>Enter Your Pre-Retirement Info</h2>
+        <!--<div><label>Current Age (yrs)</label><input type="number" name="currentAge" ng-model="$root.data.preRetData.CurrentAge" /></div>-->
+        <div class="field-wrap">
+          <label>Current Age (yrs)</label>
+          <input type="number" name="currentAge" ng-model="currentAge" numbers-Only />
+          <span class="account-description" tooltip="Enter how old you currently are">?</span>
+        </div>
+        <div ng-hide="getCalculator() == 3" class="field-wrap">
+          <label>Expected Age of Retirement (yrs)</label>
+          <input type="number" name="expectedAge" ng-model="expectedAge" numbers-Only />
+          <span class="account-description" tooltip="Enter the age when you plan to retire">?</span>
+        </div>
+        <div ng-hide="getCalculator() == 1" class="field-wrap">
+          <label>Expected Years in Retirement (yrs)</label>
+          <input type="number" name="expectedYears" ng-model="expectedYears" numbers-Only />
+          <span class="account-description" tooltip="Enter how long you expect to be in retirement for. Ie, the amount of years from when you retire, until you expect to live.">?</span>
+        </div>
+        <div class="field-wrap">
+          <label>Current Retirement Savings ($)</label>
+          <input type="number" name="savings" ng-model="savings" numbers-Only />
+          <span class="account-description" tooltip="Enter to the total dollar amount you have saved for retirement. This includes your RRSP and investments you plan to hold until retirement. Do not include your pension here.">?</span>
+        </div>
+        <div class="field-wrap">
+          <label>Expected Interest on Investment (%)</label>
+          <input type="number" name="percentage" ng-model="percentage" numbers-Only />
+          <span class="account-description" tooltip="This is the expected rate of return on your retirement savings. It can be a combination of capital gains and dividends depending on your portfolio. If you are not sure, the average is around 5%">?</span>
+        </div>
+        <div class="field-wrap">
+          <label>Annual Salary Increase (%)</label>
+          <input type="number" id="AnnualSalaryIncrease" name="AnnualSalaryIncrease" ng-model="AnnualSalaryIncrease" numbers-Only />
+          <span class="account-description" tooltip="This is how much you salary is expected to increase until retirement. The average salary increase in Canada is around 4%. If you are completely unsure what to put here, put the same value as inflation (the field below)">?</span>
+        </div>
+        <div class="field-wrap">
+          <label>Inflation Rate (%)</label>
+          <input type="number" id="InflationRate" name="InflationRate" ng-model="InflationRate" />
+          <span class="account-description" tooltip="Average inflation in Canada in the recent past was 2%">?</span>
+        </div>
+    </div>
+</div>
+<!--<div class="pre-ret-data">-->
